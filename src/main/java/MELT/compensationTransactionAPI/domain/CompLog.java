@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class compLog {
+public class CompLog {
 
     @Id @GeneratedValue
     private Long id;
