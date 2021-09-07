@@ -21,4 +21,14 @@ public class CompLog {
     private LocalDateTime insDtm;
     private String compId;
     private LocalDateTime compDtm;
+
+    protected CompLog() {}
+
+    public CompLog(CompStatus compStatus, String insId, String compId) {
+        this.compStatus = compStatus;
+        this.insId = insId;
+        this.insDtm = LocalDateTime.now();
+        this.compId = compId;
+        this.compDtm = LocalDateTime.now();
+    }
 }
