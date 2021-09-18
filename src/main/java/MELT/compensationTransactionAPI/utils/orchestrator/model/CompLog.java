@@ -1,11 +1,9 @@
-package MELT.compensationTransactionAPI.domain;
+package MELT.compensationTransactionAPI.utils.orchestrator.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,14 +15,20 @@ public class CompLog {
 
     private CompStatus compStatus;
 
+    @ManyToOne
+    @JoinColumn(name="api_id")
+    private CompStd compStd;
+
     private String insId;
     private LocalDateTime insDtm;
     private String compId;
     private LocalDateTime compDtm;
 
+    /******** 생성 메서드 ***********/
     protected CompLog() {}
 
-    public CompLog(CompStatus compStatus, String insId, String compId) {
+    public CompLog(CompStd compStd, String insId, String compId, CompStatus compStatus) {
+        this.compStd = compStd;
         this.compStatus = compStatus;
         this.insId = insId;
         this.insDtm = LocalDateTime.now();
