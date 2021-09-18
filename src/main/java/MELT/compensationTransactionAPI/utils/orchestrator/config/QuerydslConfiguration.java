@@ -1,4 +1,4 @@
-package MELT.compensationTransactionAPI.config;
+package MELT.compensationTransactionAPI.utils.orchestrator.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
