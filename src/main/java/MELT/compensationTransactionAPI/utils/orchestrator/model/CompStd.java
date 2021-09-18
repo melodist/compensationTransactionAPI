@@ -1,5 +1,8 @@
-package MELT.compensationTransactionAPI.domain;
+package MELT.compensationTransactionAPI.utils.orchestrator.model;
 
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.HttpStatus;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.RestMethod;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.SyncStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +16,20 @@ import java.time.LocalDateTime;
 public class CompStd {
 
     @Id
-    @GeneratedValue
-    @Column(name = "compstd_id")
-    private Long id;
+    @Column(name = "api_id")
+    private String id;
 
     private String url;
-    private String isHttp;
-    private String isSync;
-    private String restMethod;
+
+    @Enumerated(EnumType.STRING)
+    private HttpStatus isHttp;
+
+    @Enumerated(EnumType.STRING)
+    private SyncStatus isSync;
+
+    @Enumerated(EnumType.STRING)
+    private RestMethod restMethod;
+
     private Integer retryCnt;
 
     private String insId;
@@ -29,7 +38,8 @@ public class CompStd {
     private LocalDateTime modDtm;
 
     /******** 생성 메서드 ***********/
-    public CompStd(String url, String isHttp, String isSync, String restMethod, Integer retryCnt) {
+    public CompStd(String id, String url, HttpStatus isHttp, SyncStatus isSync, RestMethod restMethod, Integer retryCnt) {
+        this.id = id;
         this.url = url;
         this.isHttp = isHttp;
         this.isSync = isSync;

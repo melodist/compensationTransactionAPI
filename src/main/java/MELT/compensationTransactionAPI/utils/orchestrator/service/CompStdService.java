@@ -1,8 +1,8 @@
-package MELT.compensationTransactionAPI.service;
+package MELT.compensationTransactionAPI.utils.orchestrator.service;
 
-import MELT.compensationTransactionAPI.domain.CompStd;
-import MELT.compensationTransactionAPI.domain.CompStdCondition;
-import MELT.compensationTransactionAPI.repository.CompStdRepository;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStdCondition;
+import MELT.compensationTransactionAPI.utils.orchestrator.repository.CompStdRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,8 +20,7 @@ public class CompStdService {
      * 1건 입력
      */
     @Transactional
-    public Long insert(CompStd compStd) {
-        // 중복 서비스 검사
+    public String insert(CompStd compStd) {
         compStdRepository.save(compStd);
         return compStd.getId();
     }
@@ -29,7 +28,7 @@ public class CompStdService {
     /**
      * ID로 조회
      */
-    public CompStd findOne(Long id) {
+    public CompStd findOne(String id) {
         return compStdRepository.findOne(id);
     }
 

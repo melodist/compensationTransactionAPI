@@ -1,8 +1,7 @@
-package MELT.compensationTransactionAPI.repository;
+package MELT.compensationTransactionAPI.utils.orchestrator.repository;
 
-import MELT.compensationTransactionAPI.domain.CompStd;
-import MELT.compensationTransactionAPI.domain.CompStdCondition;
-import MELT.compensationTransactionAPI.domain.QCompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStdCondition;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static MELT.compensationTransactionAPI.domain.QCompStd.compStd;
+import static MELT.compensationTransactionAPI.utils.QCompStd.compStd;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class CompStdRepository {
     /**
      * ID로 조회
      */
-    public CompStd findOne(Long id) {
+    public CompStd findOne(String id) {
         return em.find(CompStd.class, id);
     }
 
