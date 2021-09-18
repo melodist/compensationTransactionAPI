@@ -1,4 +1,4 @@
-package MELT.compensationTransactionAPI.config;
+package MELT.compensationTransactionAPI.utils.orchestrator.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
