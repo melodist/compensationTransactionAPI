@@ -1,14 +1,15 @@
-package MELT.compensationTransactionAPI.service;
+package MELT.compensationTransactionAPI.utils.orchestrator.service;
 
-import MELT.compensationTransactionAPI.CompensationTransactionApiApplication;
-import MELT.compensationTransactionAPI.domain.CompStd;
-import MELT.compensationTransactionAPI.domain.CompStdCondition;
-import MELT.compensationTransactionAPI.repository.CompStdRepository;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.HttpStatus;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.RestMethod;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.SyncStatus;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStdCondition;
+import MELT.compensationTransactionAPI.utils.orchestrator.repository.CompStdRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,20 +38,21 @@ class CompStdServiceTest {
         CompStd compStd = getCompStd();
 
         //when
-        Long saveId = compStdService.insert(compStd);
+        String saveId = compStdService.insert(compStd);
 
         //then
         assertEquals(compStd, compStdRepository.findOne(saveId));
     }
 
     private CompStd getCompStd() {
+        String id = "test001";
         String url = "test";
-        String isHttp = "Y";
-        String isSync = "Y";
-        String restMethod = "POST";
+        HttpStatus isHttp = HttpStatus.HTTP;
+        SyncStatus isSync = SyncStatus.SYNC;
+        RestMethod restMethod = RestMethod.POST;
         Integer retryCnt = 5;
 
-        return new CompStd(url, isHttp, isSync, restMethod, retryCnt);
+        return new CompStd(id, url, isHttp, isSync, restMethod, retryCnt);
     }
 
     @Test
@@ -58,12 +60,7 @@ class CompStdServiceTest {
         //given
         compStdService.insert(getCompStd());
 
-        String url = "test";
-        String isHttp = "Y";
-        String isSync = "Y";
-        String restMethod = "POST";
-
-        CompStdCondition compStdCondition = new CompStdCondition(url, isHttp, isSync, restMethod, "test");
+        CompStdCondition compStdCondition = new CompStdCondition("test", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, "test");
 
         //when
         List<CompStd> compStds = compStdService.findCondition(compStdCondition);
