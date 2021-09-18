@@ -1,8 +1,11 @@
-package MELT.compensationTransactionAPI.web.controller;
+package MELT.compensationTransactionAPI.utils.orchestrator.controller;
 
-import MELT.compensationTransactionAPI.domain.CompStd;
-import MELT.compensationTransactionAPI.domain.CompStdCondition;
-import MELT.compensationTransactionAPI.service.CompStdService;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.HttpStatus;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.RestMethod;
+import MELT.compensationTransactionAPI.utils.orchestrator.enums.SyncStatus;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStdCondition;
+import MELT.compensationTransactionAPI.utils.orchestrator.service.CompStdService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/compStatus")
+@RequestMapping("/compStd")
 @RequiredArgsConstructor
-public class CompStatusController {
+public class CompStdController {
 
     private final CompStdService compStdService;
 
@@ -28,8 +31,8 @@ public class CompStatusController {
     @GetMapping("/basicView")
     public String basicView(CompStdCondition compStdCondition, Model model) {
 
-        var compStdA = new CompStd("test", "Y", "Sync", "POST", 5);
-        var compStdB = new CompStd("test", "Y", "Sync", "POST", 5);
+        var compStdA = new CompStd("test001", "test", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
+        var compStdB = new CompStd("test002", "test", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
 
         compStdService.insert(compStdA);
         compStdService.insert(compStdB);
@@ -54,7 +57,7 @@ public class CompStatusController {
      */
     @PostMapping("/addForm")
     public String addService(CompStd compStd) {
-        // TODO 보상 트랜잭션 서비스 저장 로직
+        compStdService.insert(compStd);
         return "redirect:/compStatus/basicView";
     }
 }
