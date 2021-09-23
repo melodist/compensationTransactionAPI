@@ -20,7 +20,7 @@ public class CompStdService {
      * 1건 입력
      */
     @Transactional
-    public String insert(CompStd compStd) {
+    public Long insert(CompStd compStd) {
         compStdRepository.save(compStd);
         return compStd.getId();
     }
@@ -28,8 +28,15 @@ public class CompStdService {
     /**
      * ID로 조회
      */
-    public CompStd findOne(String id) {
+    public CompStd findOne(Long id) {
         return compStdRepository.findOne(id);
+    }
+
+    /**
+     * API ID로 조회
+     */
+    public CompStd findOneByApiId(String apiId) {
+        return compStdRepository.findOneByApiId(apiId);
     }
 
     /**

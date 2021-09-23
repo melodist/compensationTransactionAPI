@@ -21,8 +21,18 @@ public class CompStdRepository {
     /**
      * ID로 조회
      */
-    public CompStd findOne(String id) {
+    public CompStd findOne(Long id) {
         return em.find(CompStd.class, id);
+    }
+
+    /**
+     * API ID로 조회
+     */
+    public CompStd findOneByApiId(String apiId) {
+        String query = "select c From CompStd c where c.apiId = :apiId";
+        return em.createQuery(query, CompStd.class)
+                .setParameter("apiId", apiId)
+                .getSingleResult();
     }
 
     /**

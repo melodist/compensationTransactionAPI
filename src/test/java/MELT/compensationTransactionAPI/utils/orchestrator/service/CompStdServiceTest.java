@@ -38,10 +38,10 @@ class CompStdServiceTest {
         CompStd compStd = getCompStd();
 
         //when
-        String saveId = compStdService.insert(compStd);
+        Long savedId = compStdService.insert(compStd);
 
         //then
-        assertEquals(compStd, compStdRepository.findOne(saveId));
+        assertEquals(compStd, compStdRepository.findOne(savedId));
     }
 
     private CompStd getCompStd() {
@@ -67,5 +67,18 @@ class CompStdServiceTest {
 
         //then
         assertEquals(compStds.size(), 1);
+    }
+
+    @Test
+    void API_ID로_조회() {
+        //given
+        Long createdId = compStdService.insert(getCompStd());
+        CompStd insertedCompStd = compStdRepository.findOne(createdId);
+
+        //when
+        CompStd findCompStd = compStdRepository.findOneByApiId(insertedCompStd.getApiId());
+
+        //then
+        assertEquals(insertedCompStd, findCompStd);
     }
 }

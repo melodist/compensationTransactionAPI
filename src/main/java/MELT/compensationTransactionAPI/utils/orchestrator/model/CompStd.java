@@ -15,9 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CompStd {
 
-    @Id
-    @Column(name = "api_id")
-    private String id;
+    @Id @GeneratedValue
+    private Long id;
+
+    @Column(unique = true)
+    private String apiId;
 
     private String url;
 
@@ -38,8 +40,8 @@ public class CompStd {
     private LocalDateTime modDtm;
 
     /******** 생성 메서드 ***********/
-    public CompStd(String id, String url, HttpStatus isHttp, SyncStatus isSync, RestMethod restMethod, Integer retryCnt) {
-        this.id = id;
+    public CompStd(String apiId, String url, HttpStatus isHttp, SyncStatus isSync, RestMethod restMethod, Integer retryCnt) {
+        this.apiId = apiId;
         this.url = url;
         this.isHttp = isHttp;
         this.isSync = isSync;
