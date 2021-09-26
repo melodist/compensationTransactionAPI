@@ -36,9 +36,10 @@ public class CompLogService {
      * @return savedLog
      */
     @Transactional
-    public CompLog createLog(CompStd compStd) {
-        CompLog savedLog = new CompLog(compStd, compStd.getInsId(), compStd.getModId(), CompStatus.WAITING);
-        return compLogRepository.save(savedLog);
+    public Long createLog(CompStd compStd) {
+        CompLog createdLog = new CompLog(compStd, compStd.getInsId(), compStd.getModId(), CompStatus.WAITING);
+        CompLog savedLog = compLogRepository.save(createdLog);
+        return savedLog.getId();
     }
 
     /**
@@ -56,7 +57,21 @@ public class CompLogService {
         return compLogRepository.findAll();
     }
 
+    /**
+     * 보상 트랜잭션 호출 이력을 갱신한다.
+     * @param logId
+     * @param compStatus
+     */
+    public Long updateLog(Long logId, CompStatus compStatus) {
+        // 조회
+        CompLog findLog = compLogRepository.getById(logId);
 
+        // 로그 갱신
+        findLog.updateStatus(compStatus);
 
+        // 갱신된 로그 저장
+        CompLog updatedLog = compLogRepository.save(findLog);
 
+        return updatedLog.getId();
+    }
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
 public class CompLog {
 
     @Id @GeneratedValue
@@ -33,6 +33,13 @@ public class CompLog {
         this.insId = insId;
         this.insDtm = LocalDateTime.now();
         this.compId = compId;
+        this.compDtm = LocalDateTime.now();
+    }
+
+    /*******연관관계 메서드 **********/
+    public void updateStatus(CompStatus compStatus) {
+        this.compStatus = compStatus;
+        this.compId = "TEST";
         this.compDtm = LocalDateTime.now();
     }
 }

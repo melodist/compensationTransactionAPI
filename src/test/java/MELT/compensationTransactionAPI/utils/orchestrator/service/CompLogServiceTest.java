@@ -42,15 +42,15 @@ class CompLogServiceTest {
     void 저장() {
         //given
         CompStd compStd = new CompStd("test001", "TEST", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
-        String savedId = compStdService.insert(compStd);
+        Long savedId = compStdService.insert(compStd);
         log.debug("savedId : {}", savedId);
 
         //when
-        CompLog savedLog = compLogService.createLog(compStd);
-        log.debug("savedId : {}", savedLog.getCompStd().getId());
+        Long createdId = compLogService.createLog(compStd);
+        log.debug("savedId : {}", createdId);
 
         //then
-        assertEquals(savedId, savedLog.getCompStd().getId());
+        assertEquals(savedId, createdId);
     }
 
     /**
@@ -61,17 +61,29 @@ class CompLogServiceTest {
         //given
         CompStd compStd1 = new CompStd("test001", "TEST", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
         CompStd compStd2 = new CompStd("test002", "TEST", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
-        String savedId1 = compStdService.insert(compStd1);
-        String savedId2 = compStdService.insert(compStd2);
+        Long savedId1 = compStdService.insert(compStd1);
+        Long savedId2 = compStdService.insert(compStd2);
         compLogService.createLog(compStd1);
         compLogService.createLog(compStd2);
 
         //when
-        List<String> result = compLogService.findAll()
+        List<Long> result = compLogService.findAll()
                 .stream().map(compLog -> compLog.getCompStd().getId()).collect(Collectors.toList());
 
         //then
         assertEquals(result, Arrays.asList(savedId1, savedId2) );
     }
 
+    @Test
+    void 이력갱신() {
+        //given
+        CompStd compStd = new CompStd("test001", "TEST", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
+        Long logId = compLogService.createLog(compStd);
+
+        //when
+        compLogService.updateLog(logId, CompStatus.COMPLETED);
+
+        //then
+        assertEquals(compLogService.findById(logId).get().getCompStatus(), CompStatus.COMPLETED);
+    }
 }
