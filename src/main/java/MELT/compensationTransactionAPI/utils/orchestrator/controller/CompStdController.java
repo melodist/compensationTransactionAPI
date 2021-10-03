@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class CompStdController {
      * @return
      */
     @PostMapping("/addForm")
-    public String addService(CompStd compStd) {
+    public String addService(@RequestBody CompStd compStd) {
         compStdService.insert(compStd);
         return "redirect:/compStatus/basicView";
     }

@@ -1,7 +1,6 @@
 package MELT.compensationTransactionAPI.utils.orchestrator.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +12,7 @@ public class CompLog {
     @Id @GeneratedValue
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private CompStatus compStatus;
 
     @ManyToOne
