@@ -6,6 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by melodist
  * User: MELT
@@ -29,5 +32,14 @@ public class RestTemplateTest {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:9100/test/test", String.class);
         Assertions.assertThat(response.getBody()).isNotEqualTo("test_failed");
+    }
+
+    @Test
+    void API_호출_테스트() {
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, String> params = new HashMap<>();
+        params.put("id", "1");
+        params.put("count", "1");
+        restTemplate.put("http://localhost:9100/test/decreaseStock/{id}/{count}", null, params);
     }
 }
