@@ -47,7 +47,7 @@ dependencies {
 	useJUnitPlatform()
 }
 
-// queryDSL이 생성하는 QClass 경로 설정
+//querydsl 추가 시작
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
@@ -66,3 +66,4 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
+//querydsl 추가 끝
