@@ -27,4 +27,10 @@ public class OrderController {
         orderService.createOrder(id, count);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PutMapping("/createCompTrx/{id}/{count}")
+    public ResponseEntity createCompTrx(@PathVariable Long id, @PathVariable int count) {
+        orderService.increaseItem(id, count);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
