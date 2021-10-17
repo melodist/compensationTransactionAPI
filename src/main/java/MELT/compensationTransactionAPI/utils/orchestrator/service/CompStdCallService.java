@@ -5,10 +5,7 @@ import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStatus;
 import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +58,7 @@ public class CompStdCallService {
     }
 
     private ResponseEntity syncMethodCall (String url, Map params) {
-        HttpEntity entity = HttpEntity.EMPTY;
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class, params);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, HttpEntity.EMPTY, Object.class, params);
         return response;
     }
 
