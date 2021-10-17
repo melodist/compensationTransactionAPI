@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static MELT.compensationTransactionAPI.utils.QCompStd.compStd;
+import static MELT.compensationTransactionAPI.utils.orchestrator.model.QCompStd.compStd;
 
 @Repository
 @RequiredArgsConstructor
