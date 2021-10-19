@@ -43,14 +43,15 @@ class CompLogServiceTest {
         //given
         CompStd compStd = new CompStd("test001", "TEST", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
         Long savedId = compStdService.insert(compStd);
-        log.debug("savedId : {}", savedId);
+        log.debug("compStd : {}", compStd);
 
         //when
-        Long createdId = compLogService.createLog(compStd);
-        log.debug("savedId : {}", createdId);
+        Long logId = compLogService.createLog(compStd);
 
         //then
-        assertEquals(savedId, createdId);
+        CompStd logCompStd = compLogService.findById(logId).get().getCompStd();
+        log.debug("logCompStd : {}", logCompStd);
+        assertEquals(compStd, logCompStd);
     }
 
     /**
