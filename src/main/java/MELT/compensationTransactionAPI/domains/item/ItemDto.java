@@ -1,6 +1,7 @@
 package MELT.compensationTransactionAPI.domains.item;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 상품 API DTO
@@ -10,6 +11,7 @@ import lombok.Data;
  * Time: 오후 10:04
  */
 @Data
+@NoArgsConstructor
 public class ItemDto {
 
     public long id;
