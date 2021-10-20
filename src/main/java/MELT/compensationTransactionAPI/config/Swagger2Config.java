@@ -1,4 +1,4 @@
-package MELT.compensationTransactionAPI.utils.orchestrator.config;
+package MELT.compensationTransactionAPI.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,16 +19,16 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("MELT.compensationTransactionAPI"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Compensation Transaction API")
+                .title("보상 트랜잭션 API")
                 .version("1.0.0")
-                .description("보상 트랜잭션 swagger API")
+                .description("보상 트랜잭션 실행을 위임받고 결과를 기록하는 API")
                 .build();
     }
 }
