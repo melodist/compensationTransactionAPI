@@ -1,11 +1,13 @@
 package MELT.compensationTransactionAPI.service;
 
+import MELT.compensationTransactionAPI.domains.Message;
 import MELT.compensationTransactionAPI.domains.Order;
 import MELT.compensationTransactionAPI.domains.item.ItemDto;
 import MELT.compensationTransactionAPI.repository.OrderRepository;
 import MELT.compensationTransactionAPI.utils.orchestrator.service.CompStdCallService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +34,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CompStdCallService compStdCallService;
 
-    public void createOrder(Long itemId, int count) {
+    public boolean createOrder(Long itemId, int count) {
         // 주문 생성
         Order order = Order.createOrder(itemId, count);
 
         // 상품 재고 차감
         decreaseItem(itemId, count);
 
+        boolean billingResult = createBill();
+
         // 결제 API 호출
-        if (createBill()) {
+        if (billingResult) {
             log.debug("Billing Succeed");
             // 주문 승인
             order.approveOrder();
@@ -57,6 +61,8 @@ public class OrderService {
         }
 
         orderRepository.save(order);
+
+        return billingResult;
     }
 
     /**
@@ -68,8 +74,11 @@ public class OrderService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 재고 확인
-        ResponseEntity<ItemDto> response = restTemplate.getForEntity("http://localhost:9100/item/{id}/", ItemDto.class, itemId);
-        ItemDto findItemDto = response.getBody();
+        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange("http://localhost:9100/item/{id}/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Message<ItemDto>>() {}, itemId);
+        ItemDto findItemDto = response.getBody().getData();
         log.debug("findItemDto : {}", findItemDto.toString());
 
         // 재고 변경
@@ -88,8 +97,11 @@ public class OrderService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 재고 확인
-        ResponseEntity<ItemDto> response = restTemplate.getForEntity("http://localhost:9100/item/{id}/", ItemDto.class, itemId);
-        ItemDto findItemDto = response.getBody();
+        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange("http://localhost:9100/item/{id}/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Message<ItemDto>>() {}, itemId);
+        ItemDto findItemDto = response.getBody().getData();
         log.debug("findItemDto : {}", findItemDto.toString());
 
         // 재고 변경
