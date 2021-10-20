@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/compStd")
 @RequiredArgsConstructor
+@ApiIgnore
 public class CompStdController {
 
     private final CompStdService compStdService;
