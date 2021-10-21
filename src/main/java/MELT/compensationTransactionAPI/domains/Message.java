@@ -1,5 +1,6 @@
 package MELT.compensationTransactionAPI.domains;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Message <T> {
 
+    @ApiModelProperty(example = "상태코드")
     private String status;
+
+    @ApiModelProperty(example = "메시지")
     private String message;
+
+    @ApiModelProperty(example = "데이터")
     private T data;
 }

@@ -3,6 +3,7 @@ package MELT.compensationTransactionAPI.controller;
 import MELT.compensationTransactionAPI.domains.Message;
 import MELT.compensationTransactionAPI.domains.OrderDto;
 import MELT.compensationTransactionAPI.service.OrderService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PutMapping("/order/{id}/{count}")
+    @ApiOperation(value = "주문 생성", notes = "상품 ID와 수량으로 주문을 생성한다.")
     public ResponseEntity<Message<OrderDto>> createOrder(@PathVariable Long id, @PathVariable int count) {
         Message<OrderDto> message;
         OrderDto orderDto = new OrderDto(id, count);
