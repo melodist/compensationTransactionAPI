@@ -9,10 +9,7 @@ import MELT.compensationTransactionAPI.utils.orchestrator.service.CompStdService
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -31,18 +28,25 @@ public class CompStdController {
      * @param model
      * @return
      */
-    @GetMapping("/basicView")
-    public String basicView(CompStdCondition compStdCondition, Model model) {
-
-        var compStdA = new CompStd("test001", "test", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
-        var compStdB = new CompStd("test002", "test", HttpStatus.HTTP, SyncStatus.SYNC, RestMethod.POST, 5);
-
-        compStdService.insert(compStdA);
-        compStdService.insert(compStdB);
-
+    @GetMapping("/")
+    public String compStdView(CompStdCondition compStdCondition, Model model) {
         List<CompStd> result = compStdService.findAll();
         model.addAttribute("result", result);
-        return "compTrx/basicView";
+        return "compTrx/compStd";
+    }
+
+    @GetMapping("/addService")
+    public String addService(Model model) {
+        var compStdA = new CompStd("SVC01"
+                ,"http://localhost:9000/order/compTrx/{id}/{stock}"
+                ,HttpStatus.HTTP
+                ,SyncStatus.SYNC
+                ,RestMethod.PUT
+                ,5);
+        compStdService.insert(compStdA);
+        List<CompStd> result = compStdService.findAll();
+        model.addAttribute("result", result);
+        return "redirect:";
     }
 
     /**
@@ -52,15 +56,5 @@ public class CompStdController {
     @GetMapping("/addForm")
     public String addForm() {
         return "compTrx/addForm";
-    }
-
-    /**
-     * 보상 트랜잭션 서비스를 저장한다.
-     * @return
-     */
-    @PostMapping("/addForm")
-    public String addService(@RequestBody CompStd compStd) {
-        compStdService.insert(compStd);
-        return "redirect:/compStatus/basicView";
     }
 }
