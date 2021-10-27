@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/compStd")
 @RequiredArgsConstructor
 @ApiIgnore
-public class CompStdController {
+public class CompStdWebController {
 
     private final CompStdService compStdService;
 

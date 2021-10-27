@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/compLog")
 @RequiredArgsConstructor
-public class CompLogController {
+public class CompLogWebController {
 
     private final CompLogService compLogService;
 
