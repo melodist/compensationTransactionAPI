@@ -1,4 +1,4 @@
-package MELT.compensationTransactionAPI.utils.orchestrator.controller;
+package MELT.compensationTransactionAPI.web.controller;
 
 import MELT.compensationTransactionAPI.utils.orchestrator.enums.HttpStatus;
 import MELT.compensationTransactionAPI.utils.orchestrator.enums.RestMethod;
