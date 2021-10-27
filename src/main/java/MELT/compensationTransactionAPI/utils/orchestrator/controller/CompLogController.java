@@ -1,21 +1,17 @@
 package MELT.compensationTransactionAPI.utils.orchestrator.controller;
 
-import MELT.compensationTransactionAPI.utils.orchestrator.model.CompLog;
-import MELT.compensationTransactionAPI.utils.orchestrator.model.CompLogDto;
 import MELT.compensationTransactionAPI.utils.orchestrator.model.CompStd;
+import MELT.compensationTransactionAPI.utils.orchestrator.model.Message;
 import MELT.compensationTransactionAPI.utils.orchestrator.service.CompLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by melodist
@@ -26,7 +22,7 @@ import java.util.stream.Collectors;
  * 보상 트랜잭션 API 로그 Controller
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/compLog")
 @RequiredArgsConstructor
 @ApiIgnore
@@ -39,30 +35,10 @@ public class CompLogController {
      * @param compStd
      * @return
      */
-    @PostMapping("/compLog/createLog")
-    public String createLog(CompStd compStd) {
+    @PostMapping("/compLog")
+    public ResponseEntity<Message> createLog(CompStd compStd) {
+        Message message = new Message("200 OK", "보상 트랜잭션 API 로그를 생성하였습니다.");
         compLogService.createLog(compStd);
-        return "success";
-    }
-
-    /**
-     * 보상 트랜잭션 API 로그를 조회한다.
-     * @param model
-     * @return
-     */
-    @GetMapping
-    public String compLogView(Model model) {
-        List<CompLog> findResult = compLogService.findAll();
-        List<CompLogDto> result = findResult.stream()
-                .map(s -> {
-                    return new CompLogDto(s.getCompStd().getApiId(),
-                            s.getCompStatus(),
-                            s.getInsDtm().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                            s.getCompDtm().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    );
-                })
-                .collect(Collectors.toList());
-        model.addAttribute("result", result);
-        return "compTrx/compLog";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
