@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDto {
 
-    private Long id; // 상품 ID
+    private Long id; // 주문 ID
+    private OrderStatus orderStatus; // 주문 상태
+    private Long itemId; // 상품 ID
     private int count; // 주문한 상품 수
 }
