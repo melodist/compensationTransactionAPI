@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Controller
@@ -38,7 +39,7 @@ public class CompStdWebController {
     @GetMapping("/addService")
     public String addService(Model model) {
         var compStdA = new CompStd("SVC01"
-                ,"http://localhost:9000/order/compTrx/{id}/{stock}"
+                ,"http://localhost:9000/order/compTrx/{id}/{count}"
                 ,HttpStatus.HTTP
                 ,SyncStatus.SYNC
                 ,RestMethod.PUT
@@ -47,6 +48,20 @@ public class CompStdWebController {
         List<CompStd> result = compStdService.findAll();
         model.addAttribute("result", result);
         return "redirect:";
+    }
+
+    /**
+     * Bean 초기화 시 보상 트랜잭션 서비스를 자동으로 등록한다.
+     */
+    @PostConstruct
+    public void init() {
+        var compStdA = new CompStd("SVC01"
+                ,"http://localhost:9000/order/compTrx/{id}/{count}"
+                ,HttpStatus.HTTP
+                ,SyncStatus.SYNC
+                ,RestMethod.PUT
+                ,5);
+        compStdService.insert(compStdA);
     }
 
     /**
