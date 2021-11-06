@@ -66,4 +66,11 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
-//querydsl 추가 끝
+
+/**
+ * 빌드할 때마다 generated/querydsl package 삭제
+ */
+compileQuerydsl.doFirst {
+	if(file(querydslDir).exists() )
+		delete(file(querydslDir))
+}
