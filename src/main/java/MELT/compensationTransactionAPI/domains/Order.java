@@ -1,5 +1,7 @@
 package MELT.compensationTransactionAPI.domains;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
  * Date: 2021-09-29 029
  * Time: 오후 10:14
  */
+@Getter
 @Entity(name = "orders")
 public class Order {
 
@@ -41,9 +44,7 @@ public class Order {
     }
 
     //==갱신 메서드==/
-    public void approveOrder() {
-        this.status = OrderStatus.APPROVED;
-    }
+    public void approveOrder() { this.status = OrderStatus.APPROVED; }
 
     public void cancelOrder() {
         this.status = OrderStatus.CANCEL;
