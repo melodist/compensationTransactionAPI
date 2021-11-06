@@ -2,6 +2,7 @@ package MELT.compensationTransactionAPI.service;
 
 import MELT.compensationTransactionAPI.domains.Message;
 import MELT.compensationTransactionAPI.domains.Order;
+import MELT.compensationTransactionAPI.domains.OrderDto;
 import MELT.compensationTransactionAPI.domains.item.ItemDto;
 import MELT.compensationTransactionAPI.repository.OrderRepository;
 import MELT.compensationTransactionAPI.utils.orchestrator.service.CompStdCallService;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by melodist
@@ -35,14 +37,22 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CompStdCallService compStdCallService;
 
-    public boolean createOrder(Long itemId, int count) {
+    // private String url = "http://ec2-3-35-217-234.ap-northeast-2.compute.amazonaws.com";
+    private String url = "http://localhost";
+    private String portItem = ":9100";
+    private String portBill = ":9200";
+
+
+    public Long createOrder(Long itemId, int count) {
         // 주문 생성
         Order order = Order.createOrder(itemId, count);
 
         // 상품 재고 차감
         decreaseItem(itemId, count);
 
-        boolean billingResult = createBill();
+        // boolean billingResult = createBill();
+        boolean billingResult = createBillV2(itemId);
+        Long orderId = -1L;
 
         // 결제 API 호출
         if (billingResult) {
@@ -54,7 +64,7 @@ public class OrderService {
             // 보상 트랜잭션 API 호출
             Map<String, String> params = new HashMap<>();
             params.put("id", String.valueOf(itemId));
-            params.put("stock", String.valueOf(count));
+            params.put("count", String.valueOf(count));
             compStdCallService.callCompensationTransaction("SVC01", params);
 
             // 주문 실패
@@ -63,7 +73,13 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        return billingResult;
+        if (billingResult) {
+            orderId = order.getId();
+        } else {
+            orderId = -order.getId();
+        }
+
+        return orderId;
     }
 
     /**
@@ -75,7 +91,7 @@ public class OrderService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 재고 확인
-        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange("http://localhost:9100/item/{id}/",
+        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange(url + portItem + "/item/{id}/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<Message<ItemDto>>() {}, itemId);
@@ -86,7 +102,7 @@ public class OrderService {
         Map<String, String> params = new HashMap<>();
         params.put("id", itemId.toString());
         params.put("stock", String.valueOf(findItemDto.getStock() - count));
-        restTemplate.put("http://localhost:9100/item/{id}/{stock}", null, params);
+        restTemplate.put(url+ portItem + "/item/{id}/{stock}", null, params);
     }
 
     /**
@@ -98,7 +114,7 @@ public class OrderService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 재고 확인
-        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange("http://localhost:9100/item/{id}/",
+        ResponseEntity<Message<ItemDto>> response = restTemplate.exchange(url + portItem + "/item/{id}/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<Message<ItemDto>>() {}, itemId);
@@ -109,13 +125,13 @@ public class OrderService {
         Map<String, String> params = new HashMap<>();
         params.put("id", itemId.toString());
         params.put("stock", String.valueOf(findItemDto.getStock() + count));
-        restTemplate.put("http://localhost:9100/item/{id}/{stock}", null, params);
+        restTemplate.put(url + portItem + "/item/{id}/{stock}", null, params);
     }
 
     public boolean createBill() {
         RestTemplate restTemplate = new RestTemplate();
         try {
-            restTemplate.exchange("http://localhost:9200/bill/createBill", HttpMethod.PUT, HttpEntity.EMPTY, String.class, new HashMap<>());
+            restTemplate.exchange(url + portBill + "/bill/createBill", HttpMethod.PUT, HttpEntity.EMPTY, String.class, new HashMap<>());
         } catch (HttpServerErrorException e) {
             log.debug(e.getStatusText());
             return false;
@@ -123,7 +139,33 @@ public class OrderService {
         return true;
     }
 
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    /**
+     * 상품 ID에 따라 다른 결제 결과를 반환한다.
+     * @param itemId : 상품 ID
+     * @return 결제 성공시 true, 실패시 false
+     */
+    public boolean createBillV2(Long itemId) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("id", itemId.toString());
+            restTemplate.getForEntity(url + portBill + "/bill/createBill/{id}", String.class, params);
+        } catch (HttpServerErrorException e) {
+            log.debug(e.getStatusText());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 주문 내역을 조회한다.
+     * @return 주문 DTO 리스트
+     */
+    public List<OrderDto> findAll() {
+        List<Order> orders = orderRepository.findAll();
+        return orders
+                .stream()
+                .map(o -> new OrderDto(o.getId(), o.getStatus(), o.getItemId(), o.getStock()))
+                .collect(Collectors.toList());
     }
 }
