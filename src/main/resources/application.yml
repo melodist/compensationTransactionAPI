@@ -18,3 +18,8 @@ logging.level:
 
 server:
   port: 9000
+
+const:
+  url: "http://localhost"
+  port-item: ":9100"
+  port-bill: ":9200"

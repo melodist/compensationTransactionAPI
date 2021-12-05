@@ -1,5 +1,6 @@
 package MELT.compensationTransactionAPI.service;
 
+import MELT.compensationTransactionAPI.config.ApplicationYmlRead;
 import MELT.compensationTransactionAPI.domains.Message;
 import MELT.compensationTransactionAPI.domains.Order;
 import MELT.compensationTransactionAPI.domains.OrderDto;
@@ -36,12 +37,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CompStdCallService compStdCallService;
+    private final ApplicationYmlRead applicationYmlRead;
 
-    // private String url = "http://ec2-3-35-217-234.ap-northeast-2.compute.amazonaws.com";
-    private String url = "http://localhost";
-    private String portItem = ":9100";
-    private String portBill = ":9200";
-
+    private String url =applicationYmlRead.getUrl();
+    private String portItem = applicationYmlRead.getPort_item();
+    private String portBill = applicationYmlRead.getPort_bill();
 
     public Long createOrder(Long itemId, int count) {
         // 주문 생성

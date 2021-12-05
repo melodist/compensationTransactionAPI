@@ -18,3 +18,8 @@ logging.level:
 
 server:
   port: 8080
+
+const:
+  url: "http://ec2-13-124-228-22.ap-northeast-2.compute.amazonaws.com"
+  port-item: ":9100"
+  port-bill: ":9200"
